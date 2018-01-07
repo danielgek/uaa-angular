@@ -1,27 +1,70 @@
 # UaaAngular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.2.
+## Instructions
 
-## Development server
+- install an instance of uaa server on you machine 
+- edit uaa.yaml to allow cors 
+- edit oath-clients.xml to set the redirect from oauth
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
+### uaa cors redirect
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```yaml
+cors:
+ xhr:
+   allowed:
+     headers:
+       - Accept
+       - Authorization
+       - Content-Type
+       - X-Requested-With
+     origin:
+       - ^localhost$
+       - ^.*\.localhost$
+       - ^localhost:4200$
+       - ^.*\.localhost:4200$
+     uris:
+       - ^/uaa/userinfo$
+       - ^/uaa/login\.do$
+       - ^/uaa/logout\.do$
+     methods:
+       - GET
+       - OPTIONS
+ default:
+   allowed:
+     headers:
+       - Accept
+       - Authorization
+       - Content-Type
+       - X-Requested-With
+     origin:
+       - ^localhost$
+       - ^.*\.localhost$
+       - ^localhost:4200$
+       - ^.*\.localhost:4200$
+     uris:
+       - ^/uaa/userinfo$
+       - ^/uaa/login\.do$
+       - ^/uaa/logout\.do$
+     methods:
+       - GET
+       - PUT
+       - POST
+       - DELETE
+```
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+```xml 
+...
+<entry key="cf">
+    <map>
+        <entry key="authorized-grant-types" value="implicit,password,refresh_token" />
+        <entry key="scope"
+            value="uaa.user,cloud_controller.read,cloud_controller.write,openid,password.write,scim.userids,cloud_controller.admin,scim.read,scim.write" />
+        <entry key="redirect-uri" value="http://localhost:8080/**" />
+        <entry key="authorities" value="uaa.none" />
+        <entry key="autoapprove" value="true" />
+    </map>
+</entry>
+...
+```
